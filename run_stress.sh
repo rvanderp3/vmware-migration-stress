@@ -38,7 +38,7 @@ function random_migrate() {
 
 function shutdownNode() {
     NODE_NAME=$1
-    oc adm drain $NODE_NAME
+    oc adm drain $NODE_NAME --delete-local-data --ignore-daemonsets --skip-wait-for-delete-timeout=20
     govc vm.power -off=true $NODE_NAME
 }
 
@@ -66,12 +66,12 @@ function randomNodeSelection() {
 
 function randomDrainAndShutdownVms() {    
     NODE_LIST=$(oc get nodes -l node-role.kubernetes.io/worker -o=jsonpath='{.items[*].metadata.name}')
-    while [ 1 ]; do
+    while true; do
         NODES=$(randomNodeSelection "$NODE_LIST")
 
         for NODE in $NODES; do
             echo Draining and shutting down node $NODE
-            shutDownNode $NODE
+            shutdownNode $NODE
         done
         TIME_TO_SLEEP=$(((RANDOM % 300)+30))
         echo Waiting $TIME_TO_SLEEP seconds before restarting nodes
