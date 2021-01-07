@@ -18,7 +18,7 @@ chmod +x openshift-tests
 ## Running stress test
 
 ~~~
-,/run_stress.sh
+./run_stress.sh
 ~~~
 
 This will take some time.  The migration and node power actions add additional load to the vCenter cluster under test.  This test could take a few hours to complete.
